@@ -20,7 +20,7 @@ public static Connection getConnection() {
         return DriverManager.getConnection(URL, USER, PASS);
  
     }catch (ClassNotFoundException | SQLException e){
-        throw new RuntimeException ("Erro na conecxão: ", e);
+        throw new RuntimeException ("Erro na conexão: ", e);
         
     }
     
