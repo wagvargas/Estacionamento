@@ -7,7 +7,7 @@ public class Vaga {
     
     private int idVaga;
     private int numero;
-    private String rua;
+    private String rua; 
     private boolean obliqua;
 
     public int getIdVaga() {
