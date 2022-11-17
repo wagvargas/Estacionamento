@@ -8,10 +8,38 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane; 
+import java.util.List;
+import java.util.ArrayList;
+
 
 
 public class VagaDAO {
     
+    
+    public List<Vaga> read(){
+       Connection con = ConnectionFactory.getConnection ();
+       PreparedStatement stmt = null;
+       ResultSet rs = null;
+       List<Vaga> vagas = new ArrayList<>();
+       
+          try{
+     stmt = con.prepareStatement ("SELECT * FROM vaga;");
+     rs = stmt. executeQuery () ;
+     while(rs.next () ) {
+         Vaga v = new Vaga ();
+         v. setIdVaga (rs.getInt ("idVaga"));
+         v. setNumero (rs.getInt ("numero"));
+         v. setRua (rs.getString ("rua"));
+         v. setObliqua (rs.getBoolean ("obliqua"));
+         vagas. add (v);
+         }
+         }catch (SQLException e) {
+            throw new RuntimeException ("Erro ao buscar os dados: ", e);
+         }finally{
+          ConnectionFactory.closeConnection(con,stmt,rs);
+    } 
+         return vagas;
+    }     
     public void create (Vaga v){
         
        Connection con = ConnectionFactory.getConnection();
@@ -46,14 +74,14 @@ public class VagaDAO {
      Vaga v = new Vaga();
      
      try{
-             stmt = con.prepareStatement("SELECT * FROM Vaga WHERE idVaga=?");
+             stmt = con.prepareStatement("SELECT * FROM Vaga WHERE idVaga=? LIMIT 1");
              stmt.setInt(1, idVaga);
              rs = stmt.executeQuery();
              if(rs != null && rs.next()) {
                  v.setIdVaga(rs.getInt("idVaga"));
                  v.setNumero(rs.getInt("numero"));
                  v.setRua(rs.getString("rua"));
-                 v.setObliqua(rs.getBoolean("obliquo"));
+                 v.setObliqua(rs.getBoolean("obliqua"));
              }
     
      }catch (SQLException e) {

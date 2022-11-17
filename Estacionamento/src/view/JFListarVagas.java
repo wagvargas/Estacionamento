@@ -5,27 +5,26 @@
  */
 package view;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.dao.VagaDAO;
 import model.bean.Vaga;
 
 public class JFListarVagas extends javax.swing.JFrame {
 
-   private void formWindowOpened (java.awt.event.WindowEvent evt){
-       readjTable();
-   }
+ 
    
-   public void readTable(){
-       DefaultTableModel modelo = (DefaultTableModel) jTVaga>getModel();
-       modelo,setNumRows(0);
+   public void readJTable(){
+       DefaultTableModel modelo = (DefaultTableModel) jTVaga.getModel();
+       modelo.setNumRows(0);
        
        VagaDAO dao = new VagaDAO();
        for(Vaga v: dao.read()){
-           modelo.addRow(new Object[])
+           modelo.addRow(new Object[]{
                    v.getIdVaga(),
                    v.getNumero(),
                    v.getRua(),
-                   visObliqua()
+                   v.isObliqua()
                            });              
        }
        
@@ -45,14 +44,20 @@ public class JFListarVagas extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTVaga = new javax.swing.JTable();
         jBtnCadastrar = new javax.swing.JButton();
         jBtnAlterar = new javax.swing.JButton();
         jBtnExcluir = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTVaga.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -63,13 +68,21 @@ public class JFListarVagas extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTVaga);
 
         jBtnCadastrar.setText("Cadastar vaga");
 
         jBtnAlterar.setText("Alterar vaga");
+        jBtnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAlterarActionPerformed(evt);
+            }
+        });
 
         jBtnExcluir.setText("Excluir vaga");
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setText("Listar Vagas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,21 +90,25 @@ public class JFListarVagas extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jBtnCadastrar)
-                        .addGap(48, 48, 48)
-                        .addComponent(jBtnAlterar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBtnExcluir))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jBtnCadastrar)
+                            .addGap(48, 48, 48)
+                            .addComponent(jBtnAlterar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jBtnExcluir))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
                 .addContainerGap(90, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBtnCadastrar)
@@ -102,6 +119,21 @@ public class JFListarVagas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jBtnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAlterarActionPerformed
+        if(jTVaga.getSelectedRow() != -1){
+           int vagaSelecionada = (int)jTVaga.getValueAt(jTVaga.getSelectedRow(), 0);
+         JFAtualizarVaga av= new JFAtualizarVaga(vagaSelecionada);
+         av.setVisible(true);
+        
+}else {
+        JOptionPane.showMessageDialog(null, "Selecione uam vaga!","Erro", JOptionPane.ERROR_MESSAGE);
+}
+    }//GEN-LAST:event_jBtnAlterarActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        readJTable();
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -142,7 +174,8 @@ public class JFListarVagas extends javax.swing.JFrame {
     private javax.swing.JButton jBtnAlterar;
     private javax.swing.JButton jBtnCadastrar;
     private javax.swing.JButton jBtnExcluir;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTVaga;
     // End of variables declaration//GEN-END:variables
 }
